@@ -21,22 +21,20 @@ import com.leninmuller.cursomc.services.PedidoService;
 public class PedidoResource {
 	
 	@Autowired
-	private PedidoService service; 
+	private PedidoService service;
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) {
-		
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	public ResponseEntity<Pedido> find(@PathVariable Integer id) {
 		Pedido obj = service.find(id);
-		return ResponseEntity.ok(obj);
-
+		return ResponseEntity.ok().body(obj);
 	}
-	
-	@RequestMapping(method = RequestMethod.POST)
+
+	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj) {
 		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-		
 
 }
