@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.leninmuller.cursomc.domain.Categoria;
-import com.leninmuller.cursomc.domain.Cliente;
 import com.leninmuller.cursomc.dto.CategoriaDTO;
 import com.leninmuller.cursomc.repositories.CategoriaRepository;
 import com.leninmuller.cursomc.services.exceptions.DataIntegrityException;
