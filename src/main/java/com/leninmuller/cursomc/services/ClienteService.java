@@ -14,12 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.leninmuller.cursomc.domain.Cidade;
 import com.leninmuller.cursomc.domain.Cliente;
 import com.leninmuller.cursomc.domain.Endereco;
+import com.leninmuller.cursomc.domain.enums.Perfil;
 import com.leninmuller.cursomc.domain.enums.TipoCliente;
 import com.leninmuller.cursomc.dto.ClienteDTO;
 import com.leninmuller.cursomc.dto.ClienteNewDTO;
 import com.leninmuller.cursomc.repositories.CidadeRepository;
 import com.leninmuller.cursomc.repositories.ClienteRepository;
 import com.leninmuller.cursomc.repositories.EnderecoRepository;
+import com.leninmuller.cursomc.security.UseSS;
+import com.leninmuller.cursomc.services.exceptions.AuthorizationException;
 import com.leninmuller.cursomc.services.exceptions.DataIntegrityException;
 import com.leninmuller.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -35,8 +38,14 @@ public class ClienteService {
 	@Autowired
 	private EnderecoRepository enderecoRepository;		
 	
+	
 	public Cliente find(Integer id) {  
-		Optional<Cliente> obj = repo.findById(id);  
+		UseSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName())); 
 	}
